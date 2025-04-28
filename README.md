@@ -1,7 +1,7 @@
 # GeoPixel <img src="src/GeoPixel/assets/logo.png" height="50">: Pixel Grounding Large Multimodal Model in Remote Sensing
 
 ---
-This repository is not mean for standalone usage.
+This repository is not mean for standalone usage!!!
 ---
 
 A Fork from [GeoPixel repo](https://github.com/mbzuai-oryx/GeoPixel) Authored by:
