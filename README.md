@@ -1,5 +1,7 @@
 # GeoPixel <img src="src/GeoPixel/assets/logo.png" height="50">: Pixel Grounding Large Multimodal Model in Remote Sensing
 
+
+
 A Fork from [GeoPixel repo](https://github.com/mbzuai-oryx/GeoPixel) Authored by:
 
 [Akashah Shabbir](https://github.com/AkashahS) , [Mohammed Zumri](https://github.com/zzumri) , [Mohammed Bennamoun](https://scholar.google.com/citations?user=ylX5MEAAAAAJ&hl=en) , [Fahad Shahbaz Khan](https://scholar.google.es/citations?user=zvaeYnUAAAAJ&hl=en) , [Salman Khan](https://salman-h-khan.github.io/)
@@ -24,11 +26,11 @@ A Fork from [GeoPixel repo](https://github.com/mbzuai-oryx/GeoPixel) Authored by
   
 ---
 
-## <img src="assets/logo.png" height="30"> GeoPixel Overview  
+## <img src="src/GeoPixel/assets/logo.png" height="30"> GeoPixel Overview  
 GeoPixel is the first large multimodal model explicitly designed for high-resolution remote sensing (RS) image comprehension and pixel-level grounding. The model processes natural language user queries with RS imagery to generate detailed outputs, incorporating interleaved masks that adapt dynamically to the spatial resolution and complexity of the input.
 
 <p align="center">
-  <img src="assets/overview.png" width="60%">
+  <img src="src/GeoPixel/assets/overview.png" width="60%">
 </p>
 
 ---
@@ -61,7 +63,7 @@ Follow the guidelines below to set up and use GeoPixel efficiently:
 ## 🛠️ Architecture
 
 <p align="center">
-  <img src="assets/architecture.png" alt="GeoPixel Architecture">
+  <img src="src/GeoPixel/assets/architecture.png" alt="GeoPixel Architecture">
 </p>
 
 GeoPixel is fundamentally composed of five key blocks: (1) Adaptive Image Divider (2) Vision Encoder (3) Large Language Model (4) Grounding Vision Encoder (5) Pixel Decoder. These modules are seamlessly integrated to facilitate high-resolution visual perception, fine-grained semantic interpretation, and precise pixel-level grounding of Remote Sensing (RS) imagery.
@@ -70,7 +72,7 @@ GeoPixel is fundamentally composed of five key blocks: (1) Adaptive Image Divide
 ## 🏷️ Annotation Pipeline
 
 <p align="center">
-  <img src="assets/annotation_pipeline.png" alt="Annotation Pipeline">
+  <img src="src/GeoPixel/assets/annotation_pipeline.png" alt="Annotation Pipeline">
 </p>
 
 We propose a semi-automatic annotation pipeline for creating a remote sensing grounded conversation generation (RS-GCG) dataset. It employs a multi-level hierarchical strategy that includes holistic scene descriptions, individual instance annotations, and group-level semantic representations, enabling a comprehensive understanding of spatial relationships and object-level details. Advanced techniques, such as Set-of-Mark (SOM) prompting combined with spatial and categorical priors, are utilized to enhance the accuracy and granularity of object-specific annotations. 
@@ -79,13 +81,13 @@ We propose a semi-automatic annotation pipeline for creating a remote sensing gr
 ## 🔍 Remote Sensing Grounded Conversation Generation (RS-GCG)
 
 <p align="center">
-  <img src="assets/rsgcg_qualitative.png" alt="rsgcg qualitative">
+  <img src="src/GeoPixel/assets/rsgcg_qualitative.png" alt="rsgcg qualitative">
 </p>
 
 GeoPixel processes user queries to produce comprehensive descriptive outputs while simultaneously grounding identified objects through interleaved, pixel-level masks, demonstrating its advanced understanding and precise interpretation of high resolution remote sensing imagery.
 
 <p align="center">
-  <img src="assets/tab_rsgcg.png" alt="rsgcg qualitative">
+  <img src="src/GeoPixel/assets/tab_rsgcg.png" alt="rsgcg qualitative">
 </p>
 
 Performance Comparison of various models on the Remote Sensing Grounded Conversation Generation (RS-GCG) task. LISA† and PixelLM† refer to pretrained models finetuned on GeoPixelD training data. GLaMM represents zero-shot performance, while GLaMM-FT denotes the pretrained model finetuned on GeoPixelD. GeoPixel demonstrates superior performance across all metrics.
@@ -95,12 +97,12 @@ Performance Comparison of various models on the Remote Sensing Grounded Conversa
 ## 🔍 Referring Remote Sensing Image Segmentation (RRSIS)
 
 <p align="center">
-  <img src="assets/rrsis_qualitative.png" alt="rrsis qualitative">
+  <img src="src/GeoPixel/assets/rrsis_qualitative.png" alt="rrsis qualitative">
 </p>
 
 GeoPixel demonstrates a robust capability to interpret referring expressions of varying complexity and lengths to accurately generate precise segmentation masks.
 <p align="center">
-  <img src="assets/tab_rrsis.png" width="70%" alt="rsgcg qualitative">
+  <img src="src/GeoPixel/assets/tab_rrsis.png" width="70%" alt="rsgcg qualitative">
 </p>
 
 Performance Comparison of GeoPixel in Referring Expression Segmentation on RRSIS-D dataset: The segmentation accuracy based on referring expressions is expressed through the Precision at IoU threshold of 0.5 (P@0.5), Overall Intersection-over-Union (oIoU) and Mean Intersection-over-Union (mIoU).
