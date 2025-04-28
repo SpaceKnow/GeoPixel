@@ -1,6 +1,6 @@
-# GeoPixel <img src="assets/logo.png" height="50">: Pixel Grounding Large Multimodal Model in Remote Sensing
+# GeoPixel <img src="src/GeoPixel/assets/logo.png" height="50">: Pixel Grounding Large Multimodal Model in Remote Sensing
 
-![](https://i.imgur.com/waxVImv.png)
+A Fork from [GeoPixel repo](https://github.com/mbzuai-oryx/GeoPixel) Authored by:
 
 [Akashah Shabbir](https://github.com/AkashahS) , [Mohammed Zumri](https://github.com/zzumri) , [Mohammed Bennamoun](https://scholar.google.com/citations?user=ylX5MEAAAAAJ&hl=en) , [Fahad Shahbaz Khan](https://scholar.google.es/citations?user=zvaeYnUAAAAJ&hl=en) , [Salman Khan](https://salman-h-khan.github.io/)
 
@@ -125,6 +125,6 @@ We appreciate InternLM-XComposer (IXC), GlaMM, and LISA for making their models 
 
 ---
 
-[<img src="assets/IVAL_logo.png" width="200" height="100">](https://www.ival-mbzuai.com)
-[<img src="assets/Oryx_logo.png" width="100" height="100">](https://github.com/mbzuai-oryx)
-[<img src="assets/MBZUAI_logo.png" width="360" height="85">](https://mbzuai.ac.ae)
+[<img src="src/GeoPixel/assets/IVAL_logo.png" width="200" height="100">](https://www.ival-mbzuai.com)
+[<img src="src/GeoPixel/assets/Oryx_logo.png" width="100" height="100">](https://github.com/mbzuai-oryx)
+[<img src="src/GeoPixel/assets/MBZUAI_logo.png" width="360" height="85">](https://mbzuai.ac.ae)

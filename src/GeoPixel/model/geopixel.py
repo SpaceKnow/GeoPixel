@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import torch.nn.functional as F
 from transformers.modeling_outputs import CausalLMOutputWithPast
-from model.IXC.modeling_internlm_xcomposer2 import InternLMXComposer2ForCausalLM
-from model.IXC.modeling_internlm2 import InternLM2Model
-from model.sam2.build_sam import build_sam2_hf
-from model.sam2.utils.transforms import SAM2Transforms
+from GeoPixel.model.IXC.modeling_internlm_xcomposer2 import InternLMXComposer2ForCausalLM
+from GeoPixel.model.IXC.modeling_internlm2 import InternLM2Model
+from GeoPixel.model.sam2.build_sam import build_sam2_hf
+from GeoPixel.model.sam2.utils.transforms import SAM2Transforms
 from transformers import TextStreamer
 try:
     from transformers.generation.streamers import BaseStreamer
@@ -161,9 +161,10 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
                 return None
         else:
             assert isinstance(image, torch.Tensor)
-            _orig_hw = [image.shape[:2]]
+            _orig_hw = [image.shape[-2:]]
+            image = image[0].permute(1,2,0).float().detach().cpu().numpy()
         image = self.model._transform(image)
-        image = image[None, ...].to(self.device)
+        image = image[None, ...].to(self.device).bfloat16()
         assert ( len(image.shape) == 4 and image.shape[1] == 3), f"image must be of size 1x3xHxW, got {image.shape}"
         features = self.get_visual_embs(image)   
         return features,_orig_hw
@@ -314,6 +315,69 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
             outputs =  super().forward(**kwargs)
         return outputs
 
+    def custom_interleav_wrap_chat(self, query, image, history = [], meta_instruction='', max_length=16384, hd_num=24):
+        "Custom Wrapping to fit the model to our 24Gb GPUS ..."
+        self.max_length = max_length
+        prompt = ''
+        if meta_instruction:
+            prompt += f"""[UNUSED_TOKEN_146]system\n{meta_instruction}[UNUSED_TOKEN_145]\n"""
+        for record in history:
+            prompt += f"""[UNUSED_TOKEN_146]user\n{record[0]}[UNUSED_TOKEN_145]\n[UNUSED_TOKEN_146]assistant\n{record[1]}[UNUSED_TOKEN_145]\n"""
+        prompt += f"""[UNUSED_TOKEN_146]user\n{query}[UNUSED_TOKEN_145]\n[UNUSED_TOKEN_146]assistant\n"""
+
+        image_nums = len(image)
+        if image_nums == 1 and prompt.find('<ImageHere>') == -1:
+            #print ('auto append image at the begining')
+            prompt = '<ImageHere>' + prompt
+
+        parts = prompt.split('<ImageHere>')
+        wrap_embeds, wrap_im_mask = [], []
+        temp_len = 0
+        need_bos = True
+
+        if len(parts) != image_nums + 1:
+            #raise ValueError('Invalid <ImageHere> prompt format.')
+            print ('Waring! The image number != given position!')
+        if image_nums > 1:
+            hd_num = 6
+
+        for idx, part in enumerate(parts):
+            if need_bos or len(part) > 0:
+                part_tokens = self.tokenizer(
+                    part,
+                    return_tensors='pt',
+                    padding='longest',
+                    add_special_tokens=need_bos).to(self.device)
+                if need_bos:
+                    need_bos = False
+
+                part_embeds = self.model.tok_embeddings(
+                    part_tokens.input_ids)
+                wrap_embeds.append(part_embeds)
+                wrap_im_mask.append(torch.zeros(part_embeds.shape[:2]))
+                temp_len += part_embeds.shape[1]
+            if idx < image_nums:
+                # here we can hack the image to be on devices
+                img = self.encode_img(image[idx], hd_num)
+                wrap_embeds.append(img)
+                wrap_im_mask.append(torch.ones(img.shape[:2]))
+                temp_len += img.shape[1]
+    
+            if temp_len > self.max_length:
+                break
+        
+        # ensure single device for non-model operations
+        wrap_embeds = [embed.to(wrap_embeds[0].device) for embed in wrap_embeds]
+
+        wrap_embeds = torch.cat(wrap_embeds, dim=1)
+        wrap_im_mask = torch.cat(wrap_im_mask, dim=1)
+        wrap_embeds = wrap_embeds[:, :self.max_length].to(self.device)
+        wrap_im_mask = wrap_im_mask[:, :self.max_length].to(self.device).bool()
+        inputs = {
+            'inputs_embeds': wrap_embeds
+        }
+        return inputs, wrap_im_mask, temp_len
+
     def evaluate(
         self,
         tokenizer,
@@ -326,7 +390,9 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
         **kwargs,
     ):
         with torch.no_grad():
-            inputs, im_mask, _ = self.interleav_wrap_chat(query, images, history=history, hd_num=hd_num)        
+            # breakpoint()
+            # inputs, im_mask, _ = self.interleav_wrap_chat(query, images, history=history, hd_num=hd_num)        
+            inputs, im_mask, _ = self.custom_interleav_wrap_chat(query, images, history=history, hd_num=hd_num)        
             inputs = {
                 k: v.to(self.device)
                 for k, v in inputs.items() if torch.is_tensor(v)
@@ -336,18 +402,13 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
                 #tokenizer.convert_tokens_to_ids(['[UNUSED_TOKEN_145]'])[0]
             ]
             all_pred_masks = []
-            
-            if stream:
-                streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
-            else: 
-                streamer = None
 
             outputs = self.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
                 im_mask=im_mask,
                 input_ids = None,
-                streamer= streamer,
+                streamer= None,
                 num_beams=1,
                 do_sample=False,
                 temperature=1.0,
@@ -364,7 +425,8 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
             response = tokenizer.decode(output_ids[0].cpu().tolist(), skip_special_tokens=True)
             response = response.replace("[UNUSED_TOKEN_145]","")
             history = history + [(query, response)]
-            if len(images)==1 and isinstance(images[0], str): 
+            # if len(images)==1 and isinstance(images[0], str): 
+            if len(images)==1: 
                 output_hidden_states = outputs.hidden_states[-1] 
                 seg_token_mask = output_ids[:, 1:-1] == self.seg_token_idx
                 inputs_embeds_len = inputs['inputs_embeds'].size(1)
@@ -379,6 +441,11 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
                 assert len(self.model.text_hidden_fcs) == 1
                 hidden_states.append(self.model.text_hidden_fcs[0](output_hidden_states))
                 last_hidden_state = torch.stack(hidden_states, dim=-1).sum(dim=-1)
+
+                # return last_hidden_state, seg_token_mask
+                # unify devices
+                seg_token_mask = seg_token_mask.to(last_hidden_state.device)
+
                 pred_embeddings = [states[masks] for states, masks in zip(last_hidden_state, seg_token_mask)]
                 image_g_features, ori_hw = self.encode_g_img(images[0]) 
 
@@ -416,3 +483,4 @@ class GeoPixelForCausalLM(InternLMXComposer2ForCausalLM):
                     all_pred_masks.append(pred_masks[:, 0])
 
         return response, all_pred_masks
+    
