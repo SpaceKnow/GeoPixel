@@ -14,6 +14,4 @@ from GeoPixel.model import sam2_configs
 if GlobalHydra.instance().is_initialized():
     GlobalHydra.instance().clear()
 
-config_dir = os.path.dirname(sam2_configs.__file__)
-
-initialize_config_module(config_dir, version_base="1.2")
+initialize_config_module('GeoPixel.model.sam2_configs', version_base="1.2")
