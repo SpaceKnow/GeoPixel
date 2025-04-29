@@ -32,8 +32,8 @@ dependencies = [
 
 
 # --- Optional Setuptools Configuration (can also go in setup.cfg) ---
-# [tool.setuptools.packages.find]
-# where = ["src"]  # Look for packages in the 'src' directory
+[tool.setuptools.packages.find]
+where = ["src"]  # Look for packages in the 'src' directory
 
-GeoPixel = ["*.yaml"]
-GeoPixel.config" = ["*.yaml"]
+[tool.setuptools.package-data]
+GeoPixel = ["**/*.yaml"]
