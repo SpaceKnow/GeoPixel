@@ -18,7 +18,7 @@ from transformers import Trainer, deepspeed
 from transformers.trainer_pt_utils import LabelSmoother
 from torch.utils.tensorboard import SummaryWriter
 from transformers import TrainerCallback
-from model.geopixel import GeoPixelForCausalLM
+from GeoPixel.model.geopixel import GeoPixelForCausalLM
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 

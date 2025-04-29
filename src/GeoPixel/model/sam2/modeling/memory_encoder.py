@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from model.sam2.modeling.sam2_utils import DropPath, get_clones, LayerNorm2d
+from GeoPixel.model.sam2.modeling.sam2_utils import DropPath, get_clones, LayerNorm2d
 
 
 class MaskDownSampler(nn.Module):

@@ -11,8 +11,8 @@ import torch
 
 from tqdm import tqdm
 
-from model.sam2.modeling.sam2_base import NO_OBJ_SCORE, SAM2Base
-from model.sam2.utils.misc import concat_points, fill_holes_in_mask_scores, load_video_frames
+from GeoPixel.model.sam2.modeling.sam2_base import NO_OBJ_SCORE, SAM2Base
+from GeoPixel.model.sam2.utils.misc import concat_points, fill_holes_in_mask_scores, load_video_frames
 
 
 class SAM2VideoPredictor(SAM2Base):

@@ -11,9 +11,9 @@ import numpy as np
 import torch
 from torchvision.ops.boxes import batched_nms, box_area  # type: ignore
 
-from model.sam2.modeling.sam2_base import SAM2Base
-from model.sam2.sam2_image_predictor import SAM2ImagePredictor
-from model.sam2.utils.amg import (
+from GeoPixel.model.sam2.modeling.sam2_base import SAM2Base
+from GeoPixel.model.sam2.sam2_image_predictor import SAM2ImagePredictor
+from GeoPixel.model.sam2.utils.amg import (
     area_from_rle,
     batch_iterator,
     batched_mask_to_box,

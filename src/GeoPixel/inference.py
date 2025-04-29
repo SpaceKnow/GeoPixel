@@ -12,7 +12,7 @@ import torch
 import random
 import numpy as np
 
-from model.geopixel import GeoPixelForCausalLM
+from GeoPixel.model.geopixel import GeoPixelForCausalLM
 
 
 def rgb_color_text(text, r, g, b):
