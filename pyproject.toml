@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 # Core metadata about your package
-name = "GeoPixel" # The distribution name (pip install your_package_name)
+name = "geopixel" # The distribution name (pip install your_package_name)
 version = "0.1.0" # Your package's version
 authors = [
   { name="Patrik Vacek", email="vacek@spaceknow.com" },
@@ -36,4 +36,4 @@ dependencies = [
 where = ["src"]  # Look for packages in the 'src' directory
 
 [tool.setuptools.package-data]
-GeoPixel = ["**/*.yaml"]
+geopixel = ["**/*.yaml"]

@@ -6,7 +6,7 @@ from ixc_utils import R560_HD18_Identity_transform
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from GeoPixel.model.sam2.utils.transforms import SAM2Transforms
+from geopixel.model.sam2.utils.transforms import SAM2Transforms
 from pycocotools import mask as M
 
 def conv2text(sources):

@@ -7,7 +7,7 @@ import transformers
 from peft import LoraConfig, get_peft_model
 from transformers import AutoTokenizer
 
-from GeoPixel.model.geopixel import GeoPixelForCausalLM
+from geopixel.model.geopixel import GeoPixelForCausalLM
 
 
 def parse_args(args):

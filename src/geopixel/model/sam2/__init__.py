@@ -9,9 +9,9 @@ import os
 from hydra import initialize_config_module
 from hydra.core.global_hydra import GlobalHydra
 
-from GeoPixel.model import sam2_configs
+from geopixel.model import sam2_configs
 
 if GlobalHydra.instance().is_initialized():
     GlobalHydra.instance().clear()
 
-initialize_config_module('GeoPixel.model.sam2_configs', version_base="1.2")
+initialize_config_module('geopixel.model.sam2_configs', version_base="1.2")

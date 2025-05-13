@@ -9,9 +9,9 @@ from typing import Optional
 import torch
 from torch import nn, Tensor
 
-from GeoPixel.model.sam2.modeling.sam.transformer import RoPEAttention
+from geopixel.model.sam2.modeling.sam.transformer import RoPEAttention
 
-from GeoPixel.model.sam2.modeling.sam2_utils import get_activation_fn, get_clones
+from geopixel.model.sam2.modeling.sam2_utils import get_activation_fn, get_clones
 
 
 class MemoryAttentionLayer(nn.Module):

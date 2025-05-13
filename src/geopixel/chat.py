@@ -7,7 +7,7 @@ import random
 import argparse
 import numpy as np
 import transformers 
-from GeoPixel.model.geopixel import GeoPixelForCausalLM
+from geopixel.model.geopixel import GeoPixelForCausalLM
 
 def rgb_color_text(text, r, g, b):
     return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
